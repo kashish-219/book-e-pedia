@@ -1,0 +1,153 @@
+.cust-profile-body {
+    display: flex;
+    /* min-height: 170vh; */
+    /* background-color: #f4f4f9; */
+    /* background-image: url('new.png'); */
+    background-image: url('luxa.org-opacity-changed-d3 (1).jpg');
+    /* background-image: url('profile.jpeg'); */
+  }
+
+.cust-profile-container {
+    /* max-width: 1200px; */
+    background: #fff;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    /* margin-left: 320px; */
+    height:max-content;
+    width:900px;
+    margin-left: 320px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    /* background-image: url('profile.jpeg'); */
+    background-image: url('prof1.jpg');
+  }
+
+  .welcome-message{
+    display:block;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+    /* height: 100vh; Makes the container fill the full height of the viewport */
+    width: 100%; /* Ensures the container takes full width */
+    text-align: center; /* Ensures the text inside h1 is centered */ /* height: 100vh; */
+    margin-bottom: 50px;
+    margin-top: 10px;
+}
+
+.welcome-message h1{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f93e;
+    border-radius: 20px;
+    height: 80px;
+    margin-left: 20px;
+    margin-right: 20px;
+    
+    /* Center the text */
+    display: flex;
+    align-items: center; /* Vertically center the text */
+    justify-content: center; /* Horizontally center the text */
+    text-align: center; /* Ensures the text is centered */
+    color: black; /* Adjust text color as needed */
+}
+
+.cust-profile-save-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    width: calc(100%/2);
+}
+
+.cust-profile-welcome-message {
+    font-size: 36px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    background: url('profile.jpeg') no-repeat center center;
+    background-size: cover;
+    padding: 20px;
+    border-radius: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cust-profile-form-container {
+    display: flex;
+    /* gap: 20px; */
+    flex-wrap: wrap;
+}
+
+.cust-profile-form-group {
+    flex: 1 1 calc(50% - 20px);
+    margin-bottom: 20px;
+}
+
+.cust-profile-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    /* color: #555; */
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.cust-profile-form-group input, .cust-profile-form-group select {
+    width: 85%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.cust-profile-payment-methods {
+    margin-top:5px;
+    color:black;
+    font-size: 25px;
+    display: block;
+}
+
+.cust-profile-payment-methods h3{
+    font-size: 35px;
+    margin-top:5px;
+}
+
+.cust-profile-payment-methods img {
+    height: 150px;
+    border-radius: 30px;
+    margin-top:5px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 30px;
+    width: 180px;
+}
+
+.cust-profile-payment-methods img:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .cust-profile-form-group {
+        flex: 1 1 100%;
+    }
+
+    .cust-profile-profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cust-profile-profile-header h2 {
+        margin-bottom: 10px;
+    }
+}

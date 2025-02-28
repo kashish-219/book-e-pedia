@@ -1,0 +1,47 @@
+
+  .video-book-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  /* Header */
+  .video-book-header {
+    margin-bottom: 20px;
+  }
+  
+  .video-book-header h1 {
+    font-size: 3rem; /* Increased font size for the header */
+    margin-bottom: 10px;
+  }
+  
+  .video-book-chapter-title {
+    font-size: 2rem; /* Increased font size for the chapter title */
+    font-weight: bold;
+    color: #0078d4;
+  }
+  
+  /* Video Section */
+  .video-book-video-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  video {
+    width: 100%;
+    max-width: 700px;
+    border-radius: 8px;
+    border: 2px solid #0078d4;
+  }
+  
+  /* Footer */
+  .video-book-footer {
+    font-size: 0.9rem;
+    color: #777;
+  }

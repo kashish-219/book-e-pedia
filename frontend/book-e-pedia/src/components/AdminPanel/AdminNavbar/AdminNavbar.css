@@ -1,0 +1,105 @@
+
+
+/* fdddddddddvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv */
+:root {
+  --primary: #25476A;
+  --light: #ffffff;
+  --dark: #191C24;
+}
+
+
+.navbar-main-container .admin-main-navbar {
+  background-color: #f8f9fa;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar-main-container .sidebar-toggler {
+  cursor: pointer;
+  font-size: 24px;
+  color: rgb(255, 255, 255);
+  margin-right: 10px;
+}
+
+.navbar-main-container .sidebar-toggler:hover {
+  color: #007bff;
+}
+
+.navbar-main-container .d-none.d-md-flex {
+  display: flex !important;
+}
+
+.navbar-main-container .navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-main-container .nav-item .nav-link {
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  margin-left: 20px;
+}
+
+.navbar-main-container .nav-item .nav-link:hover {
+  color: #00ffff;
+}
+
+.navbar-main-container .dropdown-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+  top: 100%;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-main-container .dropdown-menu a {
+  color: #333;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+.navbar-main-container .dropdown-menu a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+
+.navbar-main-container {
+  margin-left: 23.5%;
+  top: 10px;
+  height:60px;
+  border-radius: 15px ; 
+  background-color: #DEF2F1 !important;
+}
+.form-control.border-0{
+  width: 500px;
+  position: absolute;
+  color: #ffffff;
+  margin-top:-10px !important;
+  background-color: #ffffff;
+}
+.admin-main-navbar{
+  background-color: #161B75!important;
+  border-radius: 15px ;
+}
+
+.nav-item.dropdown .user-profile-top-navbar .fa-user{
+  padding-right: 10px !important;
+}
+.nav-item.dropdown .user-profile-top-navbar .d-lg-inline-flex{
+  font-weight: 500;
+  font-size: medium;
+}
+
+.fa-envelope, .fa-bell, .fa-user{
+  font-size: larger;
+}
+
+.sticky-top.px-4.py-0.admin-main-navbar{
+  width: 97%;
+}

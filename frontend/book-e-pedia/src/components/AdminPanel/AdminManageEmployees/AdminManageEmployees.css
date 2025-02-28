@@ -1,0 +1,93 @@
+/* Container Styling */
+.admin-view-emp-container {
+    max-width: 100%;
+    margin-left: 290px;
+    margin-right: 150px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+  }
+  
+  /* Title Styling */
+  .admin-view-emp-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+    margin-top: 50px;
+  }
+  
+  /* Table Styling */
+  .admin-view-emp-table {
+    width: 100%;
+    margin-top: 50px;
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+  
+  .admin-view-emp-table th,
+  .admin-view-emp-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    color: black
+  }
+  
+  .admin-view-emp-table th {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+  
+  .admin-view-emp-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .admin-view-emp-table tbody tr:hover {
+    background-color: #ef8080;
+  }
+  
+  /* No Data Styling */
+  .admin-view-emp-no-data {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+  }
+  
+  /* Action Buttons */
+  .admin-view-emp-edit-btn,
+  .admin-view-emp-delete-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .admin-view-emp-edit-btn {
+    background-color: #28a745;
+  }
+  
+  .admin-view-emp-edit-btn:hover {
+    background-color: #218838;
+  }
+  
+  .admin-view-emp-delete-btn {
+    background-color: #dc3545;
+  }
+  
+  .admin-view-emp-delete-btn:hover {
+    background-color: #c82333;
+  }
+  
+  /* 
+
+  .dashboard-grid
+  */
+  

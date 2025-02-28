@@ -1,0 +1,162 @@
+/* Importing Google Fonts - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+
+form .pass {
+  margin-top: 12px;
+}
+
+form .pass a {
+  /* color: #013142; */
+  font-size: 17px;
+  text-decoration: none;
+  color: #5900ff;
+}
+
+form .pass a:hover {
+  text-decoration: underline;
+}
+
+form .row_button input {
+  margin-top: 20px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0px;
+  background-color: #013142;
+  border: 1px solid #000000;
+  cursor: pointer;
+}
+
+form .button input:hover {
+  background-color: #000000;
+}
+
+form .signup-link {
+  text-align: center;
+  font-size: 17px;
+}
+
+form .signup-link a {
+  color: #5900ff;
+  text-decoration: none;
+}
+
+form .signup-link a:hover {
+  text-decoration: underline;
+} 
+
+
+.mb-4{
+  color:#013142;
+  text-align: center;
+}
+.login-form{
+  width: 90vw;
+  display: grid;
+  background: white;
+  padding: 50px !important;
+  font-size: 1vw;
+  border-radius:0 10px 10px 0 ;    
+  backdrop-filter: blur(14px) saturate(200%);
+  -webkit-backdrop-filter: blur(14px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.54);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+}
+
+input{
+  margin-bottom: 30px;
+}
+
+.image{
+ background-image: url("./istockphoto-1218656325-612x612.png");
+ background-size: cover;
+ width: 50%; /* Ensure the image takes full width */
+  height: auto;
+}
+.login-box{
+  display: grid;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+.login-container{
+  width: 70% !important;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.left-background h2{
+  text-align: center;
+  color: #000000;
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: blur(14px) saturate(200%);
+  -webkit-backdrop-filter: blur(14px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.54);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+}
+.login-background{
+  background: linear-gradient(to right, #000000, #000000);
+  background-image: url("./vivid-blurred-colorful-background_58702-2655.avif");
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+}
+.mt-3.mb-3.px-auto.text-center {
+  font-weight: 500;
+  text-align: center;
+  padding: 0 110px !important;
+  font-size: 18px !important;
+}
+p{
+  color: #ffffff;
+  text-align: center;
+}
+.btn{
+  background-color: #013142 !important;
+  font-weight: 500 !important;
+  letter-spacing: .3px;
+  height: 50px;
+  width: 100%;
+  color:white;
+  font-size: medium;
+
+}
+.mt-3 .btn :hover{
+  background-color: #000000;
+
+}
+.mobile-img{
+  display: grid;
+  width:70%;
+  border: 1px solid black;
+  border-radius: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.left-background{
+  background-color: #013142;
+  color: white;
+  padding: 40px!important;
+  padding-bottom: 0 !important;
+  border-radius: 10px 0 0 10px;
+}
+
+.password-field {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-password {
+  margin-left: 10px;
+  height: 40px;
+  width:30%;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
