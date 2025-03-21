@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     "bookapp",
     "rest_framework",
     "corsheaders",
+    'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -156,14 +164,65 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-CORS_ALLOW_ALL_ORIGINS = True  # Correct setting
+# CORS_ALLOW_ALL_ORIGINS = True  # Correct setting
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
+
+
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:3000',  # Add your frontend's origin here
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Changed to False since we're specifying origins
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3000",  # Your React frontend
 ]
-
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',  # Add your frontend's origin here
 ]
 
+# Email Configuration
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Already set for SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "your_email@gmail.com")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "your_email_password")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Password Reset Configuration
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "TOKEN_LIFETIME": 3600,  # Token valid for 1 hour
+}
+BASE_URL = "http://localhost:3000"  # Base URL for reset links (React frontend)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.core.mail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django_rest_passwordreset': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+CORS_ALLOW_CREDENTIALS = True

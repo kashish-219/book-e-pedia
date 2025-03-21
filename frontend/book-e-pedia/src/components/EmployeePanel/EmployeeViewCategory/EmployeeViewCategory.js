@@ -1,28 +1,32 @@
-import { React, useState } from "react";
+import React, { useState, useEffect } from "react";
 import EmployeeSidebar from "../EmployeeSidebar/EmployeeSidebar";
 import EmployeeNavbar from "../EmployeeNavbar/EmployeeNavbar";
 import "./EmployeeViewCategory.css";
 
 function EmployeeViewCategory() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
-  // Temporary dummy data for categories
-  const dummyCategories = [
-    { Category_ID: 1, Category_Name: "Fiction", Category_Description: "Fictional books", IsActive: '1' },
-    { Category_ID: 2, Category_Name: "Non-Fiction", Category_Description: "Informative books", IsActive: '1' },
-    { Category_ID: 3, Category_Name: "Science", Category_Description: "Books on science", IsActive: '1' },
-    { Category_ID: 4, Category_Name: "History", Category_Description: "Historical books", IsActive: '1' },
-    { Category_ID: 5, Category_Name: "Biography", Category_Description: "Life stories", IsActive: '1' },
-    { Category_ID: 6, Category_Name: "Fantasy", Category_Description: "Fantasy novels", IsActive: '1' },
-    { Category_ID: 7, Category_Name: "Mystery", Category_Description: "Thrilling mystery books", IsActive: '1' },
-    { Category_ID: 8, Category_Name: "Romance", Category_Description: "Romantic novels", IsActive: '1' },
-    { Category_ID: 9, Category_Name: "Horror", Category_Description: "Spooky books", IsActive: '1' },
-    { Category_ID: 10, Category_Name: "Adventure", Category_Description: "Adventure and exploration", IsActive: '1' }
-  ];
+  // Fetch category details
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/category/") // Update with the correct API endpoint
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setCategories(data.data); // Assuming 'data' contains the list of categories
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
 
   return (
     <div className={`dashboard-main-container ${isSidebarCollapsed ? "collapsed" : ""}`}>
@@ -47,8 +51,8 @@ function EmployeeViewCategory() {
               </tr>
             </thead>
             <tbody>
-              {dummyCategories.length > 0 ? (
-                dummyCategories.map((category) => (
+              {categories.length > 0 ? (
+                categories.map((category) => (
                   <tr key={category.Category_ID}>
                     <td>{category.Category_ID}</td>
                     <td>{category.Category_Name}</td>

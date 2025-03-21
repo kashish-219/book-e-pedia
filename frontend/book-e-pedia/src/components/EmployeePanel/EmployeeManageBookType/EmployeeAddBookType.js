@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import EmployeeSidebar from "../EmployeeSidebar/EmployeeSidebar";
@@ -52,37 +51,53 @@ function EmployeeAddBookType({ onAddBookType }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let formErrors = {};
-
-    // Basic Validation
+  
     if (!formData.Book_Name) {
-      formErrors.Book_Name = 'Book name is required';
+      formErrors.Book_Name = "Book name is required";
     }
-
-    // Check for file types
-    if (formData.Audio_Book === '1' && !formData.Audio_File) {
-      formErrors.Audio_File = 'Audio file is required';
+  
+    if (formData.Audio_Book === "1" && !formData.Audio_File) {
+      formErrors.Audio_File = "Audio file is required";
     }
-    if (formData.Video_Book === '1' && !formData.Video_File) {
-      formErrors.Video_File = 'Video file is required';
+    if (formData.Video_Book === "1" && !formData.Video_File) {
+      formErrors.Video_File = "Video file is required";
     }
-    if (formData.E_Book === '1' && !formData.E_Book_File) {
-      formErrors.E_Book_File = 'E-book file is required';
+    if (formData.E_Book === "1" && !formData.E_Book_File) {
+      formErrors.E_Book_File = "E-book file is required";
     }
-
+  
     setErrors(formErrors);
-
+  
     if (Object.keys(formErrors).length === 0) {
-      // Generate and update the Book_ID before submitting
-      generateBookId();
-
-      // Call the function to add or update the book type
-      onAddBookType({ ...formData, Book_ID: nextBookId }); // Use the generated Book_ID
-      navigate('/employee/manage-booktype'); // Navigate back to the book type list
+      try {
+        const method = bookToEdit ? "PATCH" : "POST";
+        const url = bookToEdit
+          ? `http://127.0.0.1:8000/booktypes/${bookToEdit.Book_ID}/`
+          : "http://127.0.0.1:8000/booktypes/";
+  
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to save book type.");
+        }
+  
+        navigate("/employee/manage-booktype");
+      } catch (error) {
+        console.error("Error saving book type:", error);
+      }
     }
   };
+  
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleSidebarToggle = () => {

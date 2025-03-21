@@ -16,11 +16,11 @@ function AdminAddProducts({ onAddProduct }) {
     Category_ID: productToEdit?.Category_ID || "", // Add Category_ID to state
     Book_Name: productToEdit?.Book_Name || "",
     Product_Description: productToEdit?.Product_Description || "",
-    Author_Name: productToEdit?.Author_Name || "",
-    Publisher_Name: productToEdit?.Publisher_Name || "",
+    Author: productToEdit?.Author || "",
+    Publisher: productToEdit?.Publisher || "",
     Language: productToEdit?.Language || "",
     Number_of_Pages: productToEdit?.Number_of_Pages || "",
-    Duration: productToEdit?.Duration || "",
+    Time_Duration: productToEdit?.Time_Duration || "",
     Product_Price: productToEdit?.Product_Price || 0.0,
     Stock: productToEdit?.Stock || 0,
   });
@@ -209,10 +209,10 @@ if (!formData.Back_Image || !(formData.Back_Image instanceof File)) {
               type="text"
               id="Author_Name"
               name="Author_Name"
-              value={formData.Author_Name}
+              value={formData.Author}
               onChange={handleChange}
                 />
-                {errors.Author_Name && <p className="error-text">*{errors.Author_Name}</p>}
+                {errors.Author && <p className="error-text">*{errors.Author}</p>}
           </div>
         
 
@@ -270,10 +270,10 @@ if (!formData.Back_Image || !(formData.Back_Image instanceof File)) {
               type="text"
               id="Publisher_Name"
               name="Publisher_Name"
-              value={formData.Publisher_Name}
+              value={formData.Publisher}
               onChange={handleChange}
                 />
-                {errors.Publisher_Name && <p className="error-text">*{errors.Publisher_Name}</p>}
+                {errors.Publisher && <p className="error-text">*{errors.Publisher}</p>}
           </div>
 
           <div className="admin-add-product-field">
@@ -306,10 +306,10 @@ if (!formData.Back_Image || !(formData.Back_Image instanceof File)) {
               type="text"
               id="Duration"
               name="Duration"
-              value={formData.Duration}
+              value={formData.Time_Duration}
               onChange={handleChange}
                 />
-                {errors.Duration && <p className="error-text">*{errors.Duration}</p>}
+                {errors.Time_Duration && <p className="error-text">*{errors.Time_Duration}</p>}
           </div>
 
           <div className="admin-add-product-field">

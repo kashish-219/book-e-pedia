@@ -1,22 +1,63 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AdminSidebar from "../AdminSidebar/AdminSidebar";
 import AdminNavbar from "../AdminNavbar/AdminNavbar";
 import "./AdminManageCategory.css";
 
-function AdminManageCategory({ categories, onAddCategory }) {
+function AdminManageCategory() {
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/category/")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data); // Log the data to check the response format
+        const activeCategories = data.data.filter(category => category.IsActive === "1");
+        setCategories(activeCategories); // Set only active categories in state
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+  
+  
   const handleEdit = (category) => {
     navigate("/admin/add-category", { state: { category } });
   };
 
   const handleDelete = (id) => {
-    // Implement delete logic here if needed
+    fetch(`http://127.0.0.1:8000/category/${id}/`, {
+      method: "PATCH", // Use PATCH or PUT depending on your backend
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ IsActive: "0" }), // Update status to inactive
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to update status");
+        }
+        return res.json();
+      })
+      .then(() => {
+        // Filter out inactive categories from state
+        setCategories((prevCategories) =>
+          prevCategories.filter((category) => category.Category_ID !== id)
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating category:", error);
+      });
   };
+  
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };

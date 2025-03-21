@@ -1,25 +1,63 @@
-import { React, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import AdminSidebar from "../AdminSidebar/AdminSidebar";
 import AdminNavbar from "../AdminNavbar/AdminNavbar";
 import './AdminManageBookType.css';
 
-function AdminManageBookType({ bookTypes, onAddBookType }) {
+function AdminManageBookType() {
+  const [bookTypes, setBookTypes] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+
+  // Fetch the book types from the backend API
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/booktypes/") // Ensure the endpoint is correct
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data); // Log data to check structure
+        const activeBookTypes = data.data.filter(book => book.IsActive === "1");
+        setBookTypes(activeBookTypes); // Only store active book types
+      })
+      .catch((error) => {
+        console.error("Error fetching book types:", error);
+      });
+  }, []);
 
   const handleEdit = (book) => {
     navigate("/admin/add-booktype", { state: { book } });
   };
 
   const handleDelete = (id) => {
-    // Confirm deletion
     if (window.confirm("Are you sure you want to delete this book type?")) {
-      // Update the state to remove the book type
-      // setBookTypes((prevBookTypes) => prevBookTypes.filter((book) => book.Book_ID !== id));
+      fetch(`http://127.0.0.1:8000/booktypes/${id}/`, {
+        method: "PATCH",  // Using PATCH to mark as inactive
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ IsActive: "0" }), // Set status to inactive
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to update status");
+          }
+          return res.json();
+        })
+        .then(() => {
+          // Remove the book from the displayed list after deletion
+          setBookTypes((prevBookTypes) => 
+            prevBookTypes.filter((book) => book.Book_ID !== id)
+          );
+        })
+        .catch((error) => {
+          console.error("Error updating book type:", error);
+        });
     }
-  }
-
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  };
 
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -71,7 +109,7 @@ function AdminManageBookType({ bookTypes, onAddBookType }) {
                         className="admin-view-book-type-edit-btn"
                         onClick={() => handleEdit(book)}
                       >
-                       <i className="fa-solid fa-pen"></i>
+                        <i className="fa-solid fa-pen"></i>
                       </button>
                       <button
                         className="admin-view-book-type-delete-btn"

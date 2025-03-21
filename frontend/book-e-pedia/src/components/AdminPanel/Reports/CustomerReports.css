@@ -1,0 +1,207 @@
+/* CustomerReports.css */
+
+/* Container styling */
+.customer-reports-container {
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  text-align: center; /* Ensure text is centered */
+  min-height: 100vh; /* Full viewport height for perfect centering */
+  box-sizing: border-box; /* Include padding in dimensions */
+  background-color: #e8f5e9; /* Light green background color */
+}
+
+/* Title styling */
+.customer-reports-container h1 {
+  color: #2c3e50;
+  font-size: 48px; /* Larger heading for emphasis */
+  margin-bottom: 60px; /* Increased space below the heading */
+  font-weight: bold;
+  border: 4px solid #2c3e50; /* Box around the title */
+  padding: 20px; /* Space inside the box */
+  border-radius: 12px; /* Rounded corners */
+  display: inline-block; /* Fit box to content width */
+}
+
+/* Form container to group labels and inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center form controls */
+  gap: 30px; /* Increased space between form elements */
+  margin-bottom: 50px; /* Add space below form */
+}
+
+/* Form controls */
+label {
+  font-weight: bold;
+  font-size: 22px; /* Larger labels for better visibility */
+}
+
+select,
+input[type="text"],
+input[type="date"] {
+  padding: 16px 24px; /* Increased padding for larger click area */
+  border: 2px solid #bdc3c7;
+  border-radius: 8px; /* Rounded edges */
+  text-align: center; /* Centered input text */
+  font-size: 18px; /* Readable font size */
+  width: 400px; /* Uniform width */
+}
+
+/* Button container for better alignment */
+.button-group {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  gap: 30px; /* Increased space between buttons */
+  margin-top: 40px; /* Space between inputs and buttons */
+}
+
+/* Button styling */
+button {
+  padding: 18px 36px; /* Larger buttons */
+  border: none;
+  border-radius: 8px; /* Rounded buttons */
+  background-color: #0F5132; /* Teal button color */
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  font-size: 20px; /* Increased font size */
+  font-weight: bold;
+}
+
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #1D2E28; /* Darker teal on hover */
+}
+
+/* Button group for download buttons */
+.download-buttons {
+  display: flex;
+  justify-content: center; /* Center the download buttons */
+  gap: 10px; /* Reduced space between download buttons */
+  margin-top: 30px; /* Add some space above download buttons */
+  align-items: center; /* Ensure buttons are vertically centered */
+}
+
+/* Download buttons beside Report Data */
+.report-header {
+  display: flex;
+  justify-content: space-between; /* Buttons and heading on the same line */
+  align-items: center;
+  width: 80%;
+  margin: 0 auto; /* Center the entire section */
+}
+
+/* Table styling */
+#report-table {
+  width: 80%; /* Slightly narrower for better alignment */
+  border-collapse: collapse;
+  margin-top: 60px; /* Increased space above the table */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Deeper shadow for better focus */
+}
+
+#report-table th, #report-table td {
+  padding: 14px 18px;
+  text-align: center; /* Centering content */
+  border: 1px solid #bdc3c7;
+}
+
+#report-table th {
+  background-color: #34495e;
+  color: white;
+  cursor: pointer;
+}
+
+#report-table th:hover {
+  background-color: #2c3e50;
+}
+
+/* Report section styling */
+.report-section {
+  margin-top: 60px; /* More separation from controls */
+  text-align: center; /* Center report data text */
+}
+
+/* Improved PDF border styling to prevent overflow */
+.pdf-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.pdf-border {
+  border: 3px solid black;
+  padding: 50px;
+  box-sizing: border-box;
+  width: 80%; /* Reduced width for better alignment */
+  overflow: hidden;
+  text-align: center;
+  margin: 0 auto;
+  background: white;
+  position: relative;
+}
+
+/* Alternative fix for PDF overflow */
+@media print {
+  .pdf-border {
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+/* Hide unwanted content during PDF export */
+.hidden-pdf-content {
+  display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .form-group,
+  .button-group,
+  .download-buttons {
+    gap: 20px; /* Reduce spacing for smaller screens */
+  }
+
+  select,
+  input[type="text"],
+  input[type="date"] {
+    width: 100%; /* Full width for small screens */
+  }
+
+  #report-table,
+  #report-table thead,
+  #report-table tbody,
+  #report-table th,
+  #report-table td,
+  #report-table tr {
+    display: block;
+  }
+
+  #report-table th {
+    text-align: right;
+  }
+
+  #report-table td {
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  #report-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+  }
+}

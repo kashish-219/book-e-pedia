@@ -47,22 +47,23 @@ function ProductDetail() {
         },
         'quantity' : 1
     };
-    if (Array.isArray(cartJson)) {
-        cartJson.push(cartData);
-        var cartString = JSON.stringify(cartJson);
-        localStorage.setItem('cartData',cartString);
-        setCartData(cartJson);
+
+    // Check if the product already exists in the cart
+    const existingItemIndex = cartJson.findIndex(item => item.product.id === productData.Product_ID);
+
+    if (existingItemIndex !== -1) {
+        // If product exists, just increase its quantity
+        cartJson[existingItemIndex].quantity += 1;
     } else {
-        cartJson = [cartData];  // Reset as an array if it's not
-        var newCartList = [];
-        newCartList.push(cartData);
-        var cartString = JSON.stringify(newCartList);
-        localStorage.setItem('cartData',cartString);
+        // If product is not in the cart, add it
+        cartJson.push(cartData);
     }
 
-    // localStorage.setItem('cartData', JSON.stringify(cartJson));
-    // setcartButtonClickStatus(true);
+    // Update local storage and context
+    localStorage.setItem('cartData', JSON.stringify(cartJson));
+    setCartData(cartJson);
 };
+
 
 
   const cartRemoveButtonHandler = () =>{

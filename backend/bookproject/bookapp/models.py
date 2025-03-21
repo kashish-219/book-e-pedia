@@ -188,74 +188,15 @@ class TBL_MasterOrder_Details(models.Model):
     # T_Amount = models.DecimalField(max_digits=8, decimal_places=2, null=False)
     Order_Status = models.CharField(max_length=20, null=False, choices=ORDER_STATUS_CHOICES)
 
-    # def save(self, *args, **kwargs):
-    #     # Fetch cart items for the customer
-    #     cart_items = TBL_Cart_Details.objects.filter(Cust_ID=self.Cust_ID)
-
-    #     # Ensure cart is not empty
-    #     if cart_items.exists():
-    #         # Calculate total quantity and total amount
-    #         self.T_Quantity = sum(item.Product_Quantity for item in cart_items)
-    #         self.T_Amount = sum(item.Total_Amount for item in cart_items)
-    #     else:
-    #         # Handle case when cart is empty
-    #         self.T_Quantity = 0
-    #         self.T_Amount = 0
-
-    #     # Call the parent save method
-    #     super().save(*args, **kwargs)
-
-    #     # Optionally clear the cart after order creation
-    #     cart_items.delete()
-    
-
     def __str__(self):
         return f"MasterOrder ID {self.MasterOrder_ID} for Customer {self.Cust_ID}"
-# class TBL_MasterOrder_Details(models.Model):
-#     ORDER_STATUS_CHOICES = [
-#         ('Completed', 'Completed'),
-#         ('Pending', 'Pending'),
-#         ('Shipped', 'Shipped'),
-#         ('Processing', 'Processing'),
-#     ]
-
-#     MasterOrder_ID = models.AutoField(primary_key=True)
-#     Cust_ID = models.ForeignKey(TBL_Customer_Details, on_delete=models.CASCADE)
-#     Emp_ID = models.ForeignKey(TBL_Employee_Details, on_delete=models.CASCADE)
-#     Order_DateTime = models.DateField(auto_now_add=True)
-#     T_Quantity = models.IntegerField(null=False)
-#     T_Amount = models.DecimalField(max_digits=8, decimal_places=2, null=False)
-#     Order_Status = models.CharField(max_length=20, null=False, choices=ORDER_STATUS_CHOICES)
-
-#     def save(self, *args, **kwargs):
-#         # Fetch cart items for the customer
-#         cart_items = TBL_Cart_Details.objects.filter(Cust_ID=self.Cust_ID)
-
-#         # Ensure cart is not empty
-#         if cart_items.exists():
-#             # Calculate total quantity and total amount
-#             self.T_Quantity = sum(item.Product_Quantity for item in cart_items)
-#             self.T_Amount = sum(item.Total_Amount for item in cart_items)
-#         else:
-#             # Handle case when cart is empty
-#             self.T_Quantity = 0
-#             self.T_Amount = 0
-
-#         # Call the parent save method
-#         super().save(*args, **kwargs)
-
-#         # Optionally clear the cart after order creation
-#         cart_items.delete()
-
-#     def __str__(self):
-#         return f"MasterOrder ID {self.MasterOrder_ID} for Customer {self.Cust_ID}"
 
 # Order Details Model
 class TBL_Order_Details(models.Model):
     COMFIRMATION_CHOICES = [('1', 'Confirmed'), ('0', 'Not Confirmed')]
 
     Order_ID = models.AutoField(primary_key=True)
-    MasterOrder_ID = models.ForeignKey(TBL_MasterOrder_Details, on_delete=models.CASCADE)
+    MasterOrder_ID = models.ForeignKey(TBL_MasterOrder_Details, on_delete=models.CASCADE,related_name='order_details')
     Product_ID = models.ForeignKey(TBL_Product, on_delete=models.CASCADE)
     Product_Quantity = models.IntegerField(null=False)
     Product_Price = models.DecimalField(max_digits=6, decimal_places=2, null=False)
@@ -297,7 +238,7 @@ class TBL_Payment(models.Model):
     Payment_Date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"Transaction ID: {self.Transaction_ID} for Customer {self.MasterOrder_ID.Cust_ID}"
+        return f"Transaction ID: {self.Transaction_ID} for Customer {self.MasterOrder_ID.Cust_ID} on {self.Payment_Date}"
 
 # # Feedback Model
 class TBL_Feedback_Details(models.Model):

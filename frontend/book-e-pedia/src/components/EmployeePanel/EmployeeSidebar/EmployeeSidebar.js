@@ -39,11 +39,14 @@ function EmployeeSidebar({ isCollapsed }) {
               <NavLink  to="/employee/manage-orders" title="Manage Orders"  className={({ isActive }) => (isActive ? "nav-item nav-link nav-link-title active" : "nav-item nav-link nav-link-title")}>
               <i class="fa-regular fa-clipboard"></i><span className=" fa-sidebar-icons">Manage Orders</span>
                   </NavLink>
-              <NavLink to="/employee/profile" title="View Customers"  className={({ isActive }) => (isActive ? "nav-item nav-link nav-link-title active" : "nav-item nav-link nav-link-title")}>
-              <i class="fa-solid fa-users"></i><span className=" fa-sidebar-icons">Manage Customers</span>
+              <NavLink to="/employee/profile" title="Manage Profile"  className={({ isActive }) => (isActive ? "nav-item nav-link nav-link-title active" : "nav-item nav-link nav-link-title")}>
+              <i class="fa-solid fa-users"></i><span className=" fa-sidebar-icons">Manage Profile</span>
                   </NavLink>
               <NavLink to="/employee/forget-password" title="Manage Feedback"  className={({ isActive }) => (isActive ? "nav-item nav-link nav-link-title active" : "nav-item nav-link nav-link-title")}>
               <i class="fa-solid fa-comments"></i><span className=" fa-sidebar-icons">Change Password</span>
+                  </NavLink>
+                  <NavLink to="/" title="Logout" className={({ isActive }) => (isActive ? "nav-item nav-link nav-link-title active" : "nav-item nav-link  nav-link-title")} >
+          <i className="fa-solid fa-arrow-right-from-bracket"></i><span className=" fa-sidebar-icons">Log Out</span>
                   </NavLink>
               
            </div>

@@ -55,34 +55,55 @@ function AdminAddBookType({ onAddBookType }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let formErrors = {};
-
-    // Basic Validation
+  
+    // Basic validation
     if (!formData.Book_Name) {
-      formErrors.Book_Name ='Please enter Book Name';
+      formErrors.Book_Name = 'Please enter Book Name';
     }
-
-    // Check for file types
-    if (formData.Audio_Book === '1' && !formData.Audio_File) {
-      formErrors.Audio_File = 'Audio file is required';
-    }
-    if (formData.Video_Book === '1' && !formData.Video_File) {
-      formErrors.Video_File = 'Video file is required';
-    }
-    if (formData.E_Book === '1' && !formData.E_Book_File) {
-      formErrors.E_Book_File = 'E-book file is required';
-    }
-
+  
     setErrors(formErrors);
-
+  
     if (Object.keys(formErrors).length === 0) {
-      // Generate and update the Book_ID before submitting
-      generateBookId();
-
-      // Call the function to add or update the book type
-      onAddBookType({ ...formData, Book_ID: nextBookId }); // Use the generated Book_ID
-      navigate('/employee/manage-booktype'); // Navigate back to the book type list
+      if (bookToEdit) {
+        // If editing, update the existing book type
+        fetch(`http://127.0.0.1:8000/booktypes/${bookToEdit.Book_ID}/`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to update book type");
+          return res.json();
+        })
+        .then(() => {
+          navigate("/admin/manage-booktype"); // Redirect after update
+        })
+        .catch((error) => {
+          console.error("Error updating book type:", error);
+        });
+      } else {
+        // If adding a new book type
+        generateBookId();
+        fetch("http://127.0.0.1:8000/booktypes/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData, Book_ID: nextBookId }),
+        })
+        .then((res) => res.json())
+        .then(() => {
+          navigate("/admin/manage-booktype"); // Redirect after adding
+        })
+        .catch((error) => {
+          console.error("Error adding book type:", error);
+        });
+      }
     }
   };
+  
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleSidebarToggle = () => {

@@ -1,27 +1,60 @@
-
-
-  import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import EmployeeSidebar from "../EmployeeSidebar/EmployeeSidebar";
 import EmployeeNavbar from "../EmployeeNavbar/EmployeeNavbar";
 import './EmployeeManageBookType.css';
 
-function EmployeeManageBookType({ bookTypes, onAddBookType }) {
+function EmployeeManageBookType() {
+  const [bookTypes, setBookTypes] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBookTypes = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/booktypes/");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        // Ensure only active records are stored in state
+        const activeBookTypes = data.data.filter(book => book.IsActive === "1" || book.IsActive === 1);
+        setBookTypes(activeBookTypes);
+      } catch (error) {
+        console.error("Error fetching book types:", error);
+      }
+    };
+
+    fetchBookTypes();
+  }, []);
 
   const handleEdit = (book) => {
     navigate("/employee/add-booktype", { state: { book } });
   };
 
-  const handleDelete = (id) => {
-    // Confirm deletion
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this book type?")) {
-      // Update the state to remove the book type
-       bookTypes.filter((book) => book.Book_ID !== id);
-    }
-  }
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/booktypes/${id}/`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ IsActive: 0 }),
+        });
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+        if (!response.ok) {
+          throw new Error("Failed to update book type status.");
+        }
+
+        setBookTypes((prevBookTypes) => prevBookTypes.filter((book) => book.Book_ID !== id));
+
+        console.log(`Book ID ${id} marked as inactive.`);
+      } catch (error) {
+        console.error("Error deleting book type:", error);
+      }
+    }
+  };
 
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -39,7 +72,7 @@ function EmployeeManageBookType({ bookTypes, onAddBookType }) {
 
       <div className={`dashboard-main-content ${isSidebarCollapsed ? "expanded" : ""}`}>
         <Link to="/employee/add-booktype" className="btn btn-primary">
-        <i className="fa fa-plus-circle"></i> Add New Book Type
+          <i className="fa fa-plus-circle"></i> Add New Book Type
         </Link>
 
         <div className="admin-view-book-type-container">
@@ -53,7 +86,6 @@ function EmployeeManageBookType({ bookTypes, onAddBookType }) {
                 <th>Audio Book</th>
                 <th>E-Book</th>
                 <th>Video Book</th>
-                <th>Is Active</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -67,13 +99,12 @@ function EmployeeManageBookType({ bookTypes, onAddBookType }) {
                     <td>{book.Audio_Book}</td>
                     <td>{book.E_Book}</td>
                     <td>{book.Video_Book}</td>
-                    <td>{book.IsActive === "1" ? "Active" : "Inactive"}</td>
                     <td>
                       <button
                         className="admin-view-book-type-edit-btn"
                         onClick={() => handleEdit(book)}
                       >
-                       <i className="fa-solid fa-pen"></i>
+                        <i className="fa-solid fa-pen"></i>
                       </button>
                       <button
                         className="admin-view-book-type-delete-btn"
@@ -86,8 +117,8 @@ function EmployeeManageBookType({ bookTypes, onAddBookType }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="admin-view-book-type-no-data">
-                    No book types found.
+                  <td colSpan="7" className="admin-view-book-type-no-data">
+                    No active book types found.
                   </td>
                 </tr>
               )}
@@ -100,5 +131,3 @@ function EmployeeManageBookType({ bookTypes, onAddBookType }) {
 }
 
 export default EmployeeManageBookType;
-
-

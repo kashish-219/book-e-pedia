@@ -53,41 +53,73 @@ function AdminAddCategory({ onAddCategory }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let formErrors = {};
-
+  
     // Validation for fields
-    if (!categoryData.Category_Name) formErrors.Category_Name = 'Please enter Category Name.';
-    else if (categoryData.Category_Name.length > 25) {
+    if (!categoryData.Category_Name) {
+      formErrors.Category_Name = "Please enter Category Name.";
+    } else if (categoryData.Category_Name.length > 25) {
       formErrors.Category_Name = "Category name should not be more than 25 letters.";
     }
-
-    
-    if (!categoryData.Category_Photo) formErrors.Category_Photo = 'Please enter Category photo.';
-    if (!categoryData.Category_Description) formErrors.Category_Description = 'Please enter Category description.';
-    else if (categoryData.Category_Description.length > 250) {
+  
+    if (!categoryData.Category_Photo && !categoryToEdit?.Category_Photo) {
+      formErrors.Category_Photo = "Please enter Category photo.";
+    }
+  
+    if (!categoryData.Category_Description) {
+      formErrors.Category_Description = "Please enter Category description.";
+    } else if (categoryData.Category_Description.length > 250) {
       formErrors.Category_Description = "Category Description should not be more than 250 letters.";
     }
-
-
+  
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
-    } else {
-      // Generate a new Category_ID before submitting the category data
-      generateCategoryId();
-
-      // Update the Category_ID with the latest value
-      setCategoryData(prev => ({
-        ...prev,
-        Category_ID: nextCategoryId,
-      }));
-
-      // Call the function to add or update the category
-      onAddCategory(categoryData);
+      return;
+    }
+  
+    try {
+      if (categoryToEdit) {
+        // If editing, send a PATCH request to update the category
+        const response = await fetch(`http://127.0.0.1:8000/category/${categoryToEdit.Category_ID}/`, {
+          method: "PATCH", // Use PATCH to update only the changed fields
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            Category_Name: categoryData.Category_Name,
+            Category_Description: categoryData.Category_Description,
+            IsActive: categoryData.IsActive,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to update category.");
+        }
+      } else {
+        // If adding a new category, generate a new ID and send a POST request
+        generateCategoryId();
+  
+        const response = await fetch("http://127.0.0.1:8000/category/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(categoryData),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to add category.");
+        }
+      }
+  
       navigate("/admin/manage-categories"); // Navigate back to the category list
+    } catch (error) {
+      console.error("Error updating category:", error);
     }
   };
+  
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -107,7 +139,9 @@ function AdminAddCategory({ onAddCategory }) {
 
       <div className={`dashboard-main-content ${isSidebarCollapsed ? "expanded" : ""}`}>
         <div className="admin-add-category-container admin-add-product-container">
-          <h1 className="admin-add-category-title admin-add-product-title">Add New Category</h1>
+          <h1 className="admin-add-category-title admin-add-product-title">
+            {categoryToEdit ? "Edit Category" : "Add New Category"}
+          </h1>
           <form onSubmit={handleSubmit} className="admin-add-category-form admin-add-product-form">
             <div className="form-group">
               <label htmlFor="Category_Name">Category Name</label>
@@ -131,6 +165,21 @@ function AdminAddCategory({ onAddCategory }) {
                 onChange={handleFileChange}
                 className="form-input"
               />
+              {categoryToEdit && categoryToEdit.Category_Photo && (
+                <div>
+                  <img
+                    src={categoryToEdit.Category_Photo}
+                    alt={categoryToEdit.Category_Name}
+                    className="category-photo-preview"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                      marginLeft: "10px",
+                    }}
+                  />
+                </div>
+              )}
               {errors.Category_Photo && <div className="error">{errors.Category_Photo}</div>}
             </div>
 

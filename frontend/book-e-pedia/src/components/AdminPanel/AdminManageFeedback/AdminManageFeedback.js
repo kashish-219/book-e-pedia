@@ -5,33 +5,18 @@ import './AdminManageFeedback.css';
 
 function AdminManageFeedback() {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  // Fetch feedback details (replace with actual API call)
+  // Fetch feedback details from the Django API
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        // Mock feedback data
-        const mockFeedbacks = [
-          {
-            Feedback_ID: "FB001",
-            Product_ID: "P001",
-            Cust_ID: "CUST001",
-            Description: "Great product! Highly satisfied with the quality.",
-            Feedback_DateTime: "2025-01-24T10:30:00Z",
-            IsActive: "1",
-          },
-          {
-            Feedback_ID: "FB002",
-            Product_ID: "P002",
-            Cust_ID: "CUST002",
-            Description: "Delivery was delayed, but the product was worth it.",
-            Feedback_DateTime: "2025-01-22T14:45:00Z",
-            IsActive: "0",
-          },
-        ];
-  
-        // Simulating API response
-        setFeedbacks(mockFeedbacks);
+        const response = await fetch('http://localhost:8000/api/feedbacks/?is_active=1'); // Ensure your API filters inactive feedback
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setFeedbacks(data.data);
       } catch (error) {
         console.error("Error fetching feedbacks:", error);
       }
@@ -39,19 +24,38 @@ function AdminManageFeedback() {
   
     fetchFeedbacks();
   }, []);
-
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  
 
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   // Handle delete feedback
-  const handleDeleteFeedback = (id) => {
-    const updatedFeedbacks = feedbacks.filter(feedback => feedback.Feedback_ID !== id);
-    setFeedbacks(updatedFeedbacks);
-    alert(`Feedback with ID ${id} has been deleted.`);
+  const handleDeleteFeedback = async (id) => {
+    if (window.confirm("Are you sure you want to delete this feedback?")) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/feedbacks/${id}/`, {
+          method: "PATCH",  // Using PATCH to update IsActive
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ IsActive: 0 }),  // Set IsActive to 0
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to update feedback status.");
+        }
+  
+        // Remove the feedback from the state
+        setFeedbacks(feedbacks.filter(feedback => feedback.Feedback_ID !== id));
+  
+        console.log(`Feedback ID ${id} marked as inactive.`);
+      } catch (error) {
+        console.error("Error deleting feedback:", error);
+      }
+    }
   };
+  
 
   return (
     <div className={`dashboard-main-container ${isSidebarCollapsed ? "collapsed" : ""}`}>

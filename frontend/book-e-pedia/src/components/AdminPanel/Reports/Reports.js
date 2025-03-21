@@ -1,13 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Reports.css";
 import AdminSidebar from "../AdminSidebar/AdminSidebar";
 import AdminNavbar from "../AdminNavbar/AdminNavbar";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
-function Reports() {
+const columnNameMappings = {
+  MasterOrder_ID: "MasterOrder ID",
+  MasterOrder_ID_id: "Order ID (Ref)",
+  Payment_Date: "Payment Date",
+  Payment_Mode: "Payment Mode",
+  Payment_Status: "Payment Status",
+  Transaction_ID: "Transaction ID",
+  Cust_ID: "Customer ID",
+  Cust_Fname: "Customer First Name",
+  Cust_Lname: "Customer Last Name",
+  Product_ID: "Product ID",
+  Product_Name: "Product Name",
+  Category_ID: "Category ID",
+  Category_Name: "Category Name",
+  Product_Price: "Product Price",
+  Product_Quantity: "Product Quantity",
+  Total_Amount: "Total Amount",
+  IsActive: "Is Active",
+  DOB: "Date of Birth"
+};
+
+const cleanColumnName = (key) => {
+  let cleanKey = key.split("__").pop();
+  let normalizedKey = cleanKey.toLowerCase();
+  let mappedKey = Object.keys(columnNameMappings).find(
+    (k) => k.toLowerCase() === normalizedKey
+  );
+  return mappedKey
+    ? columnNameMappings[mappedKey]
+    : cleanKey.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const Reports = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+
+  const [selectedReport, setSelectedReport] = useState("customer");
+  const [reportData, setReportData] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+
+  useEffect(() => {
+    fetchReportData(selectedReport);
+  }, [selectedReport]);
+
+  const fetchReportData = (reportType) => {
+    fetch(`http://127.0.0.1:8000/api/get_report_data/${reportType}/`)
+      .then((response) => response.json())
+      .then((data) => setReportData(data))
+      .catch((error) => console.error("Error fetching report data:", error));
+  };
+
+  const sortData = (column) => {
+    let direction = "asc";
+    if (sortConfig.key === column && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key: column, direction });
+    const sortedData = [...reportData].sort((a, b) => {
+      const aValue = a[column];
+      const bValue = b[column];
+
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+    setReportData(sortedData);
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = Object.keys(reportData[0] || {}).map(cleanColumnName);
+    const tableRows = reportData.map(row => Object.values(row));
+
+    autoTable(doc, { head: [tableColumn], body: tableRows });
+    doc.save("report.pdf");
+  };
+
+  const downloadCSV = () => {
+    const csvHeaders = Object.keys(reportData[0] || {}).map(cleanColumnName).join(",");
+    const csvRows = reportData.map(row => Object.values(row).join(","));
+    const csvContent = [csvHeaders, ...csvRows].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -22,128 +112,80 @@ function Reports() {
         <AdminSidebar isCollapsed={isSidebarCollapsed} />
       </div>
 
-      {/* Main Content */}
-      <div className={`dashboard-main-content ${isSidebarCollapsed ? "expanded" : ""}`}>
-        <h1>Admin Dashboard Reports</h1>
-        <p>Visual insights about customers, products, and sales performance.</p>
 
-        <div className="reports-charts-container">
-          {/* Sales Report */}
-          <div className="chart-wrapper">
-            <h3>Sales</h3>
-            <svg width="100%" height="250">
-              <defs>
-                <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00C49F" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#00C49F" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <g>
-                {/* X-Axis labels */}
-                <text x="40" y="230" fontSize="12">Jan</text>
-                <text x="120" y="230" fontSize="12">Feb</text>
-                <text x="200" y="230" fontSize="12">Mar</text>
-                <text x="280" y="230" fontSize="12">Apr</text>
-                <text x="360" y="230" fontSize="12">May</text>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-8">
+      <div className="bg-white/30 backdrop-blur-md shadow-xl rounded-2xl p-6 max-w-5xl w-full text-center">
+        <h1 className="text-4xl font-bold text-black mt-4 mb-6 drop-shadow-lg">
+          📊 Generate Reports
+        </h1>
 
-                {/* Y-Axis scale */}
-                <text x="10" y="200" fontSize="12">100</text>
-                <text x="10" y="160" fontSize="12">200</text>
-                <text x="10" y="120" fontSize="12">300</text>
-                <text x="10" y="80" fontSize="12">400</text>
+        <div className="mb-6">
+          <select
+            className="p-3 border rounded-lg text-black"
+            value={selectedReport}
+            onChange={(e) => setSelectedReport(e.target.value)}
+          >
+            <option value="customer">Customer Report</option>
+            <option value="order">Order Report</option>
+            <option value="payment">Payment Report</option>
+          </select>
+        </div>
 
-                <path d="M 40 200 Q 120 100, 200 160 T 360 80" fill="url(#salesGradient)" stroke="#00C49F" strokeWidth="2" />
-              </g>
-            </svg>
-          </div>
+        <div className="flex gap-4 mb-6" style={{padding:'8px'}}>
+          <button
+            onClick={downloadPDF}
+            className="px-6 py-3 text-white bg-red-500 hover:bg-red-700 rounded-lg shadow-md transition transform duration-300" style={{background:'crimson'}}
+          >
+            📄 Download PDF 
+          </button>   <button
+            onClick={downloadCSV}
+            className="px-6 py-3 text-white font-medium bg-gradient-to-r from-green-500 to-teal-500 rounded-lg shadow-md hover:scale-105 transition transform duration-300" style={{background:'green'}}
+          >
+            📊 Download CSV
+          </button>
+        </div>
 
-          {/* Income Report */}
-          <div className="chart-wrapper">
-            <h3>Revenue</h3>
-            <svg width="100%" height="250">
-              <defs>
-                <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8884d8" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#8884d8" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <g>
-                {/* X-Axis labels */}
-                <text x="40" y="230" fontSize="12">Q1</text>
-                <text x="120" y="230" fontSize="12">Q2</text>
-                <text x="200" y="230" fontSize="12">Q3</text>
-                <text x="280" y="230" fontSize="12">Q4</text>
-
-                {/* Y-Axis scale */}
-                <text x="10" y="180" fontSize="12">200</text>
-                <text x="10" y="140" fontSize="12">400</text>
-                <text x="10" y="100" fontSize="12">600</text>
-                <text x="10" y="60" fontSize="12">800</text>
-
-                <path d="M 40 180 Q 120 120, 200 90 T 360 60" fill="url(#incomeGradient)" stroke="#8884d8" strokeWidth="2" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Customer Growth Report */}
-          <div className="chart-wrapper">
-            <h3>Customer Growth</h3>
-            <svg width="100%" height="250">
-              <defs>
-                <linearGradient id="customerGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF8042" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#FF8042" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <g>
-                {/* X-Axis labels */}
-                <text x="40" y="230" fontSize="12">Jan</text>
-                <text x="120" y="230" fontSize="12">Feb</text>
-                <text x="200" y="230" fontSize="12">Mar</text>
-                <text x="280" y="230" fontSize="12">Apr</text>
-
-                {/* Y-Axis scale */}
-                <text x="10" y="200" fontSize="12">50</text>
-                <text x="10" y="160" fontSize="12">100</text>
-                <text x="10" y="120" fontSize="12">150</text>
-                <text x="10" y="80" fontSize="12">200</text>
-
-                <path d="M 40 200 Q 120 140, 200 100 T 360 70" fill="url(#customerGradient)" stroke="#FF8042" strokeWidth="2" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Product Performance Report */}
-          <div className="chart-wrapper">
-            <h3>Product Growth in Units</h3>
-            <svg width="100%" height="250">
-              <defs>
-                <linearGradient id="productGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FFBB28" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#FFBB28" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <g>
-                {/* X-Axis labels */}
-                <text x="40" y="230" fontSize="12">P1</text>
-                <text x="120" y="230" fontSize="12">P2</text>
-                <text x="200" y="230" fontSize="12">P3</text>
-                <text x="280" y="230" fontSize="12">P4</text>
-
-                {/* Y-Axis scale */}
-                <text x="10" y="150" fontSize="12">100</text>
-                <text x="10" y="110" fontSize="12">200</text>
-                <text x="10" y="70" fontSize="12">300</text>
-                <text x="10" y="30" fontSize="12">400</text>
-
-                <path d="M 40 150 Q 120 170, 200 90 T 360 100" fill="url(#productGradient)" stroke="#FFBB28" strokeWidth="2" />
-              </g>
-            </svg>
-          </div>
+        <div className="overflow-x-auto rounded-lg shadow-md">
+          <table className="min-w-full bg-white shadow-lg rounded-lg">
+            <thead>
+              <tr className="bg-indigo-600 text-white text-lg">
+                {reportData.length > 0 &&
+                  Object.keys(reportData[0]).map((key) => (
+                    <th
+                      key={key}
+                      className="py-3 px-5 border cursor-pointer"
+                      onClick={() => sortData(key)}
+                    >
+                      {cleanColumnName(key)}
+                      {sortConfig.key === key && (
+                        <span>
+                          {sortConfig.direction === "asc" ? " ▲" : " ▼"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+              </tr>
+            </thead>
+            <tbody>
+              {reportData.map((item, index) => (
+                <tr
+                  key={index}
+                  className="border-t even:bg-gray-100 odd:bg-gray-200 hover:bg-gray-300 transition"
+                >
+                  {Object.keys(item).map((key, idx) => (
+                    <td key={idx} className="py-3 px-5 border text-center">
+                      {item[key]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+    </div>
   );
-}
+};
 
 export default Reports;

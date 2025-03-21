@@ -33,6 +33,8 @@ urlpatterns = [
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path("api-auth/ ",include('rest_framework.urls')),
+    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),  # Added for password reset
+
 ]
 
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
